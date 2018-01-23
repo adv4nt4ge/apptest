@@ -6,7 +6,6 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -21,17 +20,18 @@ public class AppTest {
 
     private static long INSTALL_DURATION_IN_SECONDS = 120L;
     private AppiumDriver driver;
-    MobileElement appTitle;
     private WebDriverWait wait;
     private long explicitWaitTimeoutInSeconds = 10L;
+    private String versionPlatform = "7.0";
+    private String nameDevice = "Nexus";
 
     @Before
     public void setup() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-        desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "8.0");
+        desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, versionPlatform);
         desiredCapabilities.setCapability(MobileCapabilityType.NO_RESET, true);
-        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Nexus");
+        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, nameDevice);
         desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.android.vending");
         desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, "com.google.android.finsky.activities.MainActivity");
         desiredCapabilities.setCapability("deviceOrientation", "portrait");
@@ -42,37 +42,37 @@ public class AppTest {
 
     @Test
     public void testGooglePlayApp() throws Exception {
+
         String testAppName = "Scatter Slots Murka";
         String checkName = "Игровые Автоматы Scatter Slots";
-        String version = "3.17.1";
+        String versionApp = "3.17.1";
 
-
-        // wait until search bar is visible, and then tap on it
+        // ждем пока загрузится строка поиска в плей маркете
         wait.until(ExpectedConditions.visibilityOf(
                 driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.android.vending:id/search_box_idle_text\")"))))
                 .click();
 
-        // type in the name of the app into the search bar
+        // пишем имя приложения в поисковую строку
         driver.findElement(MobileBy.className("android.widget.EditText"))
                 .sendKeys(testAppName);
 
-        // tap on the suggested option that contains the app name
+        // тап для поиска нашего приложения и приводим все к маленьким буквам
         wait.until(ExpectedConditions.visibilityOf(
                 driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.android.vending:id/suggest_text\").text(\"" + testAppName.toLowerCase() + "\")"))))
                 .click();
 
-        // tap for the app title to be displayed
+        // тап по нашему приложению в поиске
         wait.until(ExpectedConditions.visibilityOf(
                 driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.android.vending:id/li_title\").text(\"" + checkName + "\")")))).click();
 
-        // check version app
+        // проверка версии приложения
         driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").resourceId(\"com.android.vending:id/callout\")"))
                 .click();
         driver.findElement(MobileBy.AndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(new UiSelector().text(\"Адрес эл. почты разработчика\"));"));
 
 
         try {
-            driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").resourceId(\"com.android.vending:id/extra_description\").text(\"" + version.trim() + "\")"));
+            driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").resourceId(\"com.android.vending:id/extra_description\").text(\"" + versionApp.trim() + "\")"));
         } catch (NoSuchElementException ex) {
             ex.getMessage();
             System.out.println("Version not found");
@@ -84,11 +84,11 @@ public class AppTest {
         driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.ImageButton\")"))
                 .click();
 
-        // tap on the Install button
+        // нажимаем кнопку установить
         driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"УСТАНОВИТЬ\")"))
                 .click();
 
-        // tap on accept
+        // нажимаем подвердить если таковое окно появится
         try {
             MobileElement accept = (MobileElement) driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().resourceId(\"com.android.vending:id/continue_button\")"));
             accept.click();
@@ -96,18 +96,18 @@ public class AppTest {
             pr.getMessage();
         }
 
-        // wait until "installed" shows up for INSTALL_DURATION_IN_SECONDS
+        // ждем пока приложение установится
         new WebDriverWait(driver, INSTALL_DURATION_IN_SECONDS).until(ExpectedConditions.presenceOfElementLocated(
                 MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"ОТКРЫТЬ\")")));
 
-        // quit current driver instance - this quits the google playstore
+        // выход из плеймаркета
         driver.quit();
 
-        // launch newly installed app
+        // запуск приложения
         driver = new AndroidDriver(new URL("http://0.0.0.0:4723/wd/hub"), installedAppCaps());
         driver.launchApp();
 
-        //access granted
+        // подтвержедение со всеми доступами
         MobileElement buttonGranted = (MobileElement) driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"РАЗРЕШИТЬ\")"));
         for (int i = 0; buttonGranted.isDisplayed(); i++) {
             buttonGranted.click();
@@ -119,9 +119,9 @@ public class AppTest {
 
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-        desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "8.0");
+        desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, versionPlatform);
         desiredCapabilities.setCapability(MobileCapabilityType.NO_RESET, true);
-        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Nexus");
+        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, nameDevice);
         desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.murka.scatterslots");
         desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, "com.murka.android.core.MurkaUnityActivity");
         desiredCapabilities.setCapability("autoLaunch", "false");
@@ -129,11 +129,11 @@ public class AppTest {
         return desiredCapabilities;
     }
 
-    @After
+    /*@After
     public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
-    }
+    }*/
 
 }
