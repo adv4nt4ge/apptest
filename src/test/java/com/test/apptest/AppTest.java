@@ -21,8 +21,8 @@ public class AppTest {
     private static long INSTALL_DURATION_IN_SECONDS = 120L;
     private AppiumDriver driver;
     private WebDriverWait wait;
-    private long explicitWaitTimeoutInSeconds = 10L;
-    private String versionPlatform = "7.0";
+    private long explicitWaitTimeoutInSeconds = 15L;
+    private String versionPlatform = "8.0";
     private String nameDevice = "Nexus";
 
     @Before
@@ -45,7 +45,7 @@ public class AppTest {
 
         String testAppName = "Scatter Slots Murka";
         String checkName = "Игровые Автоматы Scatter Slots";
-        String versionApp = "3.17.1";
+        String versionApp = "3.18.0";
 
         // ждем пока загрузится строка поиска в плей маркете
         wait.until(ExpectedConditions.visibilityOf(

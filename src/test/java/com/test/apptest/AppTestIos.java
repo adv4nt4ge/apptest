@@ -25,7 +25,7 @@ public class AppTestIos {
     private AppiumDriver driver;
     private WebDriverWait wait;
     private long explicitWaitTimeoutInSeconds = 10L;
-    private String versionPlatform = "7.0";
+    private String versionPlatform = "8.0";
     private String nameDevice = "Nexus";
 
     @Before
