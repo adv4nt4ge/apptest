@@ -13,6 +13,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -24,9 +27,11 @@ public class AppTest {
     private long explicitWaitTimeoutInSeconds = 15L;
     private String versionPlatform = "8.0";
     private String nameDevice = "Nexus";
+    final String appPackage = "com.murka.scatterslots";
+    final String appActivity = "com.murka.android.core.MurkaUnityActivity";
 
     @Before
-    public void setup() throws MalformedURLException {
+    public void setup() throws IOException, InterruptedException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
         desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, versionPlatform);
@@ -38,6 +43,9 @@ public class AppTest {
         driver = new AndroidDriver(new URL("http://0.0.0.0:4723/wd/hub"), desiredCapabilities);
 
         this.wait = new WebDriverWait(driver, explicitWaitTimeoutInSeconds);
+
+        //проверка если приложение установленно то удалить его
+        uninstallApp(appPackage);
     }
 
     @Test
@@ -122,11 +130,31 @@ public class AppTest {
         desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, versionPlatform);
         desiredCapabilities.setCapability(MobileCapabilityType.NO_RESET, true);
         desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, nameDevice);
-        desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.murka.scatterslots");
-        desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, "com.murka.android.core.MurkaUnityActivity");
+        desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, appPackage);
+        desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, appActivity);
         desiredCapabilities.setCapability("autoLaunch", "false");
 
         return desiredCapabilities;
+    }
+
+    private void uninstallApp(String appPackage) throws IOException, InterruptedException {
+        final Process p = Runtime.getRuntime().exec("adb uninstall " + appPackage);
+
+        new Thread(new Runnable() {
+            public void run() {
+                BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line = null;
+
+                try {
+                    while ((line = input.readLine()) != null)
+                        System.out.println(line);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        p.waitFor();
     }
 
     /*@After
