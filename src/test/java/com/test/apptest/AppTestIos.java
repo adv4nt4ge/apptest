@@ -25,9 +25,9 @@ public class AppTestIos {
     public void setup() throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("bundleId", "com.apple.AppStore");
-        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+        //capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("deviceName", "device");
+        capabilities.setCapability("deviceName", "iPhone 6s Plus");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("udid", udid);
 
