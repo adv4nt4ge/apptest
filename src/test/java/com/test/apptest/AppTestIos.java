@@ -17,9 +17,7 @@ public class AppTestIos {
 
     private static long INSTALL_DURATION_IN_SECONDS = 120L;
     private AppiumDriver driver;
-    private WebDriverWait wait;
     private long explicitWaitTimeoutInSeconds = 10L;
-    private String versionPlatform = "8.0";
     private String udid = "f63531d60e46804d84e88b9747b8d245321bf2a0";
 
 
