@@ -87,7 +87,6 @@ public class AppTest {
             driver.quit();
         }
 
-
         //закрыть доп инфо
         driver.findElement(MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.ImageButton\")"))
                 .click();
