@@ -25,11 +25,14 @@ public class AppTestIos {
     public void setup() throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("bundleId", "com.apple.AppStore");
-        //capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("deviceName", "iPhone 6s Plus");
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("udid", udid);
+        capabilities.setCapability("xcodeOrgId", "KPY2W2D6J7");
+        capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+        capabilities.setCapability("noReset", true);
+
 
         driver = new IOSDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
     }
