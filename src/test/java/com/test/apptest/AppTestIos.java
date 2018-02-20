@@ -9,6 +9,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -18,17 +22,29 @@ public class AppTestIos {
     private static long INSTALL_DURATION_IN_SECONDS = 120L;
     private AppiumDriver driver;
     private long explicitWaitTimeoutInSeconds = 10L;
-    private String udid = "f63531d60e46804d84e88b9747b8d245321bf2a0";
+    //private String udid = "f63531d60e46804d84e88b9747b8d245321bf2a0";
+    //private String udid = "E8D546B4-2DF4-4581-978E-CA63C361BBD1";
 
+   public String deviceUDID() throws IOException {
+        ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "/usr/local/bin/idevice_id -l");
+        builder.redirectErrorStream(true);
+        Process p = builder.start();
+        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line;
+        line = r.readLine();
+        //System.out.println(line);
+        return line;
+    }
 
     @Before
-    public void setup() throws MalformedURLException {
+    public void setup() throws IOException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("bundleId", "com.apple.AppStore");
         capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("deviceName", "iPhone 6s Plus");
+        capabilities.setCapability("deviceName", "iPhone");
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("udid", udid);
+        capabilities.setCapability("platformVersion", "11.2.5");
+        capabilities.setCapability("udid", deviceUDID());
         capabilities.setCapability("xcodeOrgId", "KPY2W2D6J7");
         capabilities.setCapability("xcodeSigningId", "iPhone Developer");
         capabilities.setCapability("startIWDP", true);
@@ -36,6 +52,7 @@ public class AppTestIos {
 
 
         driver = new IOSDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
+        driver.manage().timeouts().implicitlyWait(60,TimeUnit.SECONDS);
     }
 
     @Test
