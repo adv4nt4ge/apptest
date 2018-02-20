@@ -31,6 +31,7 @@ public class AppTestIos {
         capabilities.setCapability("udid", udid);
         capabilities.setCapability("xcodeOrgId", "KPY2W2D6J7");
         capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+        capabilities.setCapability("startIWDP", true);
         capabilities.setCapability("noReset", true);
 
 
