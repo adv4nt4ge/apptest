@@ -3,12 +3,14 @@ package com.test.apptest;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -53,7 +55,7 @@ public class AppTest {
 
         String testAppName = "Scatter Slots Murka";
         String checkName = "Игровые Автоматы Scatter Slots";
-        String versionApp = "3.18.0";
+        String versionApp = "3.19.0";
 
         // ждем пока загрузится строка поиска в плей маркете
         wait.until(ExpectedConditions.visibilityOf(
@@ -119,6 +121,16 @@ public class AppTest {
         for (int i = 0; buttonGranted.isDisplayed(); i++) {
             buttonGranted.click();
         }
+
+
+        TouchAction touchAction = new TouchAction(driver);
+        touchAction.tap(39, 512);
+        touchAction.tap(39, 512);
+
+        //тап по кнопки buy
+        touchAction.press(39, 512);
+        //тап по кнопки
+        touchAction.press(820, 307);
 
     }
 
